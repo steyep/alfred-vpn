@@ -1,12 +1,13 @@
 items=
 
 disconnected=$(/opt/cisco/anyconnect/bin/vpn status | grep Disconnected)
+statusPID="./_resources/vpnstat.pid"
 
 if [[ $disconnected ]]; then
   arg=Connect
   icon=./_resources/off.png
   status=Disconnected
-  test -f ./_resources/vpnstat.pid && rm ./_resources/vpnstat.pid
+  test -f $statusPID && kill -9 $(cat $statusPID) && rm $statusPID
 else
   arg=Disconnect
   icon=./_resources/on.png
