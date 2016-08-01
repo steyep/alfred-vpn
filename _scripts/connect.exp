@@ -1,0 +1,25 @@
+#!/usr/bin/expect
+
+set timeout 20
+set host [lindex $argv 0]
+set user [lindex $argv 1]
+set pass [lindex $argv 2]
+log_user 0
+
+spawn /opt/cisco/anyconnect/bin/vpn connect "$host"
+expect {
+  "state: Connected" { send_user "Already connected\n"; exit 0 }
+  "Group: *" { send "\r" }
+}
+
+expect "Username:" { send "$user\r" }
+expect "Password:" { send "$pass\r" }
+expect "Second Password:" { send "push\r" }
+expect {
+  "Login failed" { send_user "Login failed.\n"; exit 1 }
+  timeout { send_user "Request timed out.\n"; exit 1 }
+  "y/n" { send "y\r" }
+}
+
+expect "state: Connected" { send_user "Connected Successfully\n" }
+interact
