@@ -17,7 +17,7 @@ expect "Password:" { send "$pass\r" }
 expect "Second Password:" { send "push\r" }
 expect {
   "Login failed" { send_user "Login failed.\n"; exit 1 }
-  timeout { send_user "Request timed out.\n"; exit 1 }
+  timeout { send_user "Request timed out.\n"; exit 0 }
   "y/n" { send "y\r" }
 }
 
