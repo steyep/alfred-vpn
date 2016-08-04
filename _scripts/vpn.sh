@@ -15,7 +15,10 @@ then
 	fi
 else
 	/opt/cisco/anyconnect/bin/vpn disconnect 1>/dev/null
-	result="Disconnected Successfully"
+
+	# If the AnyConnect.app is running, we want to quit it as well.
+	app=$(ps ax | grep -v grep | grep AnyConnect | awk '{ printf $1; }')
+	test "$app" && kill -9 $app
 
 	# capture status pid. Kill on disconnect if it's running
 	# Kill based on PID rather than $showmenu incase user alters settings 
@@ -24,6 +27,8 @@ else
 		then
 		kill -9 $(cat $statusPID) && rm $statusPID
 	fi
+
+	result="Disconnected Successfully"
 fi
 
 echo $result

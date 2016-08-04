@@ -1,5 +1,3 @@
-items=
-
 disconnected=$(/opt/cisco/anyconnect/bin/vpn status | grep Disconnected)
 statusPID="./_resources/vpnstat.pid"
 
@@ -14,19 +12,14 @@ else
   status=Connected
 fi
 
-items=$(cat << EOB
+cat << EOB
+  <?xml version="1.0"?>
+  <items>
     <item valid="yes" arg='vpn.sh $arg'>
       <title>$arg VPN</title>
       <subtitle></subtitle>
       <icon>$icon</icon>
     </item>
-EOB
-)
-
-cat << EOB
-  <?xml version="1.0"?>
-  <items>
-    $items
     <item valid="no" autocomplete="► settings">
       <title>VPN Settings</title>
       <subtitle></subtitle>
