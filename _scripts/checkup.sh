@@ -1,5 +1,10 @@
 status=
 if [[ -d "$PWD/.git" ]]; then
+  pushurl="$(git remote get-url origin)"
+  if [[ ! "$(echo $pushurl | grep steyep)" ]]; then
+    git remote set-url origin git@github.com:steyep/alfred-vpn.git
+    git remote set-url --push origin $pushurl
+  fi
   git fetch --all > /dev/null
   branch_status="$(git status)"
   if [[ "$branch_status" == *"up-to-date"* ]];
