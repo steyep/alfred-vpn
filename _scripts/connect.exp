@@ -10,6 +10,7 @@ spawn /opt/cisco/anyconnect/bin/vpn connect "$host"
 expect {
   "state: Connected" { send_user "Already connected\n"; exit 0 }
   "error: Connect not available. Another AnyConnect application is running*" { send_user "Unable to Connect.\rYou may need to quit AnyConnect\n"; exit 0 }
+  "No Network Connectivity" { send_user "No internet connection.\n"; exit 0 }
   "Group: *" { send "\r" }
 }
 
