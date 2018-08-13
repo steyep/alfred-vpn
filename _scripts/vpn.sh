@@ -4,6 +4,11 @@ statusPID="./_resources/vpnstat.pid"
 auth="./_scripts/auth.sh"
 source $auth
 
+# If the AnyConnect.app is running, we want to quit it
+# before trying to connect via the CLI tool.
+app=$(ps ax | grep -v grep | grep AnyConnect | awk '{ printf $1; }')
+test "$app" && kill -9 $app
+
 if [[ "$q" == "Connect" ]];
 then
 	authenticate
@@ -15,14 +20,7 @@ then
 	fi
 else
 	/opt/cisco/anyconnect/bin/vpn disconnect 1>/dev/null
-
-	# If the AnyConnect.app is running, we want to quit it as well.
-	app=$(ps ax | grep -v grep | grep AnyConnect | awk '{ printf $1; }')
-	test "$app" && kill -9 $app
-
-	# capture status pid. Kill on disconnect if it's running
-	# Kill based on PID rather than $showmenu incase user alters settings 
-	# while VPN is connected
+	# Capture status pid & kill on disconnect (if it's running).
 	if [ -f $statusPID ];
 		then
 		kill -9 $(cat $statusPID) && rm $statusPID
